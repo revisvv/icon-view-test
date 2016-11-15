@@ -8,7 +8,7 @@ app.service('itemsGenerator', function() {
       items.push({
         id: `item_${i}`,
         text: `Item Name ${i}`,
-        img: `item${i}.png`,
+        img: `icon.png`,
         checked: false
       });
     }
