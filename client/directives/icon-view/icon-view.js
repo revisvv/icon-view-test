@@ -93,15 +93,20 @@ app.directive('iconView', function(itemsGenerator) {
         }
         scope.loadPerCount = scope.calculateLoadPerCount();
 
+        scope.updateInfiniteValues = (number) => {
+          scope.infiniteItems = _.first(scope.settings.items, number);
+
+          scope.loadedItemsCount = scope.infiniteItems.length;
+          scope.canLoadMore = scope.settings.items.length - scope.loadedItemsCount > 0;
+        }
+
         scope.reloadInfiniteItems = (forced) => {
           const newLoadPerCount = scope.calculateLoadPerCount();
 
           if (scope.loadPerCount !== newLoadPerCount || forced) {
             scope.loadPerCount = newLoadPerCount;
-            scope.infiniteItems = _.first(scope.settings.items, scope.loadPerCount);
 
-            scope.loadedItemsCount = scope.infiniteItems.length;
-            scope.canLoadMore = scope.settings.items.length - scope.loadedItemsCount > 0;
+            scope.updateInfiniteValues(scope.loadPerCount);
           }
         }
 
@@ -111,6 +116,14 @@ app.directive('iconView', function(itemsGenerator) {
           scope.reloadInfiniteItems(true);
         }
         scope.regenerateItems(scope.itemsCount);
+
+        scope.loadMoreItems = () => {
+          if (scope.canLoadMore) {
+            scope.$apply(() => {
+              scope.updateInfiniteValues(scope.loadedItemsCount+scope.loadPerCount);
+            });
+          }
+        }
 
         scope.$watch('itemStyles.width', () => {
           scope.reloadInfiniteItems();
@@ -127,17 +140,6 @@ app.directive('iconView', function(itemsGenerator) {
         scope.$watch('containerStyles.height', () => {
           scope.reloadInfiniteItems();
         });
-
-        scope.loadMoreItems = () => {
-          if (scope.canLoadMore) {
-            scope.$apply(() => {
-              scope.infiniteItems = _.first(scope.settings.items, scope.loadedItemsCount+scope.loadPerCount);
-
-              scope.loadedItemsCount = scope.infiniteItems.length;
-              scope.canLoadMore = scope.settings.items.length - scope.loadedItemsCount > 0;
-            });
-          }
-        }
       }
     };
   });
