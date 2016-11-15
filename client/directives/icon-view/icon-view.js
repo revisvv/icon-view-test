@@ -21,7 +21,7 @@ app.directive('iconView', function(itemsGenerator) {
           removeItems: scope.settings.removeItems || function(itemIds) {
             if (itemIds && itemIds.length) {
               scope.settings.items = _.filter(scope.settings.items, (item) => !itemIds.includes(item.id));
-              scope.infiniteItems = _.filter(scope.infiniteItems, (item) => !itemIds.includes(item.id));
+              scope.infiniteItems = _.first(scope.settings.items, scope.loadedItemsCount);
             }
           },
           checkItems: scope.settings.checkItems || function(itemIds) {
