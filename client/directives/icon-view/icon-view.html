@@ -1,0 +1,42 @@
+
+<div class="icon-view-settings">
+  <label>Ширина контейнера</label>
+  <input name="itemwidth" id="itemwidth" type="number" ng-model="containerStyles.width">
+  <br/>
+  <label>Высота контейнера</label>
+  <input name="itemheight" id="itemheight" type="number" ng-model="containerStyles.height">
+  <br/>
+  <label>Ширина элементов</label>
+  <input name="itemwidth" id="itemwidth" type="number" ng-model="itemStyles.width">
+  <br/>
+  <label>Высота элементов</label>
+  <input name="itemheight" id="itemheight" type="number" ng-model="itemStyles.height">
+  <br/>
+  <label>Количество элементов для генерации</label>
+  <input name="itemscount" id="itemscount" type="number" ng-model="itemsCount">
+  <br/>
+  <button ng-click="regenerateItems(itemsCount)">
+    Сгенерировать
+  </button>
+</div>
+
+<div class="icon-view-controls">
+  <button ng-click="settings.events.removeCheckedItems()">
+    Удалить
+  </button>
+  <button ng-click="settings.events.checkAllItems()">
+    Выделить/Сбросить
+  </button>
+
+  Всего: {{ settings.items.length }}
+  Загружено: {{ infiniteItems.length }}
+</div>
+
+<div class="icon-view-container" ng-style="containerStyles" on-scroll="loadMoreItems">
+  <div ng-repeat="item in infiniteItems" ng-click="settings.events.clickItem(item)"
+       ng-style="itemStyles" class="icon-view-container__icon-view-item"
+       ng-class="{ 'checked': item.checked }">
+    <img ng-src="{{ item.img }}" class="icon-view-container__icon-view-item__img">
+    <div class="icon-view-container__icon-view-item__text">{{ item.text }}</div>
+  </div>
+</div>

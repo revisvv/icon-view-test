@@ -1,0 +1,33 @@
+
+.icon-view-container {
+  width: 300px;
+  height: 300px;
+  overflow: auto;
+  border: 1px solid;
+
+  .icon-view-container__icon-view-item {
+    width: 90px;
+    height: 90px;
+    float: left;
+    overflow: hidden;
+    padding: 1px;
+    margin: 1px;
+
+    &.checked {
+      border: 1px solid black;
+      padding: 0px;
+    }
+
+    .icon-view-container__icon-view-item__img {
+      width: 75%;
+      height: 75%;
+      margin: auto;
+      display: block;
+    }
+
+    .icon-view-container__icon-view-item__text {
+      white-space: nowrap;
+      text-align: center;
+    }
+  }
+}
