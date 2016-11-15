@@ -74,18 +74,6 @@ app.directive('iconView', function(itemsGenerator) {
           }
         }
 
-        scope.itemsCount = 200;
-        scope.loadPerCount = 30;
-
-        scope.regenerateItems = (number) => {
-          scope.settings.items = itemsGenerator.generate(number);
-          scope.infiniteItems = _.first(scope.settings.items, scope.loadPerCount);
-
-          scope.loadedItemsCount = scope.infiniteItems.length;
-          scope.canLoadMore = scope.settings.items.length - scope.loadedItemsCount > 0;
-        }
-        scope.regenerateItems(scope.itemsCount);
-
         scope.containerStyles = {
           width: scope.settings.containerWidth,
           height: scope.settings.containerHeight
@@ -95,6 +83,50 @@ app.directive('iconView', function(itemsGenerator) {
           width: scope.settings.itemWidth,
           height: scope.settings.itemHeight
         }
+
+        scope.itemsCount = 200;
+        scope.calculateLoadPerCount = () => {
+          const cols = Math.floor(scope.containerStyles.width/(scope.itemStyles.width+2));
+          const rows = Math.floor(scope.containerStyles.height/(scope.itemStyles.height+2));
+
+          return cols*(rows+1);
+        }
+        scope.loadPerCount = scope.calculateLoadPerCount();
+
+        scope.reloadInfiniteItems = (forced) => {
+          const newLoadPerCount = scope.calculateLoadPerCount();
+
+          if (scope.loadPerCount !== newLoadPerCount || forced) {
+            scope.loadPerCount = newLoadPerCount;
+            scope.infiniteItems = _.first(scope.settings.items, scope.loadPerCount);
+
+            scope.loadedItemsCount = scope.infiniteItems.length;
+            scope.canLoadMore = scope.settings.items.length - scope.loadedItemsCount > 0;
+          }
+        }
+
+        scope.regenerateItems = (number) => {
+          scope.settings.items = itemsGenerator.generate(number);
+
+          scope.reloadInfiniteItems(true);
+        }
+        scope.regenerateItems(scope.itemsCount);
+
+        scope.$watch('itemStyles.width', () => {
+          scope.reloadInfiniteItems();
+        });
+
+        scope.$watch('itemStyles.height', () => {
+          scope.reloadInfiniteItems();
+        });
+
+        scope.$watch('containerStyles.width', () => {
+          scope.reloadInfiniteItems();
+        });
+
+        scope.$watch('containerStyles.height', () => {
+          scope.reloadInfiniteItems();
+        });
 
         scope.loadMoreItems = () => {
           if (scope.canLoadMore) {
