@@ -17,6 +17,7 @@ app.directive('iconView', function(itemsGenerator) {
           items: scope.settings.items || [],
           addItems: scope.settings.addItems || function(items) {
             scope.settings.items = _.union([], scope.settings.items, items);
+            scope.canLoadMore = scope.settings.items.length - scope.loadedItemsCount > 0;
           },
           removeItems: scope.settings.removeItems || function(itemIds) {
             if (itemIds && itemIds.length) {
